@@ -11,7 +11,7 @@ V1
 - 자동 인코딩(utf-8) 변환
 
 V1 결과 양식
-![V1_Result](https://user-images.githubusercontent.com/17823031/123603679-14dfa700-d835-11eb-8bc4-9f88d35b8826.jpg)
+![image](https://user-images.githubusercontent.com/17823031/123603885-45bfdc00-d835-11eb-8d9d-68c55f5d90d5.png)
 - 서버 개수에 따라 열 추가
 
 V1 사용법
