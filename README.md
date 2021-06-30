@@ -29,7 +29,7 @@
 - 자동 인코딩(utf-8) 변환   
 
 ### V2 결과 양식 ###
-[추가 예정]
+![image](https://user-images.githubusercontent.com/17823031/123909858-9873d200-d9b4-11eb-931c-3213774b5419.png)
 - 서버 개수에 따라 행 추가   
 
 ### V2 사용법 ###
