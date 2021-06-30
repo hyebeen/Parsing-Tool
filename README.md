@@ -1,5 +1,5 @@
 # 인프라 취약점 진단 결과 파싱 도구 #
-![image](https://user-images.githubusercontent.com/17823031/123910354-467f7c00-d9b5-11eb-970f-f125fd2b41a1.png)
+![image](https://user-images.githubusercontent.com/17823031/123910228-2059dc00-d9b5-11eb-99a9-45d3785b2771.png)
 - 스크립트 결과(텍스트 파일)를 엑셀파일로 항목별 파싱   
    
 -----------------------------------------
