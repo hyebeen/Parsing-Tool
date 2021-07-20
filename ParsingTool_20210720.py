@@ -4,15 +4,18 @@
 # pyinstaller --icon=pngegg.ico --onefile ParsingTool.py
 
 # 개선할 점
-# 1. 문자열 입력 -> try except로 검사하여 재입력받기
+# 1. 양호취약 판별 로직 수정
+# 2. utf-8 변환 에러 수정
+# 3. 페이지 나누기 미리보기
 
 import io, os, time, sys
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
-
+from openpyxl.worksheet.properties import WorksheetProperties, PageSetupProperties
+from openpyxl.worksheet.views import Pane
 
 def ConvertFile(pathDir, fileList) :
-    print("\n*** 파싱을 위해 대상 파일을 utf-8로 변환합니다.")
+    print("\n*** 파싱을 위해 대상 파일을 utf-8로 변환 실행")
     for fileName in fileList:
         fileDir = pathDir + '\\' + fileName
         try:
@@ -20,36 +23,36 @@ def ConvertFile(pathDir, fileList) :
         except UnicodeError:
             continue
         io.open(fileDir, mode='w', encoding="utf-8").write(file)
-        print("\n*** utf-8 포맷으로 변환이 완료되었습니다.")
+        print("\n*** utf-8 포맷으로 변환 완료")
 
 def InputInformation():
-    pathDir = input("\n* 파싱 대상 파일이 있는 디렉터리를 입력하세요.\n  Ex) C:\\Users\hyebeen\\Desktop\\directory \n  => ")
+    pathDir = input("\n* 파싱 대상 파일이 있는 경로 입력\n  Ex) C:\\Users\hyebeen\\Desktop\\directory \n  => ")
     try :
         fileList = os.listdir(pathDir)
     except FileNotFoundError :
-        print("*** 입력하신 경로가 존재하지 않습니다.")
+        print("*** 잘못된 경로")
         time.sleep(2)
         sys.exit()
 
-    startLine = input("\n* \"시작 패턴\"을 입력하세요.\n (default)##### START ##### \n  =>  ")
+    startLine = input("\n* \"시작 패턴\"을 입력\n (default)##### START ##### \n  =>  ")
     if startLine == "" : startLine = "##### START #####"
 
     newStartLine = ""
-    startString = input("\n* 파싱 결과에 시작 문자열을 추가하시겠습니까?  Ex) 예:y,  (default)아니오:n \n  => ")
+    startString = input("\n* 파싱 결과에 시작 문자열을 추가\n  Ex) 예:y,  (default)아니오:n \n  => ")
     if startString == "" : startString = "n"
     elif startString == "y" :
-        newStartLine = input("\n* 파싱 결과에 추가 할 시작 문자열을 입력하세요.\n (default)[시스템 현황]\n =>  ")
+        newStartLine = input("\n* 파싱 결과에 추가 할 시작 문자열을 입력\n (default)[시스템 현황]\n =>  ")
         newStartLine += "\n"
         if newStartLine == "" : newStartLine = "[시스템 현황]\n"
 
-    endLine = input("\n* \"마지막 패턴\"을 입력하세요.\n  Ex) (default)##### END ##### \n  =>  ")
+    endLine = input("\n* \"마지막 패턴\"을 입력\n  Ex) (default)##### END ##### \n  =>  ")
     if endLine == "" : endLine = "##### END #####"
 
     resultLine = ""
-    resultFlag = input("\n* 양호, 취약 여부를 파싱하시겠습니까?\n* 스크립트 결과 파일에 양호, 취약여부가 나와야 합니다.\n  예:y,  (default)아니오:n \n  =>  ")
+    resultFlag = input("\n* 양호, 취약 여부 파싱\n* 스크립트 결과 파일에 양호, 취약여부가 나와야 함.\n  예:y,  (default)아니오:n \n  =>  ")
     if resultFlag == "y" :
         resultFlag = 2
-        resultLine = input("\n* \"결과 패턴\"을 입력하세요.\n  Ex) \"★ U_01. 결과 : 양호\" 이면 \"결과 : \" 입력\n* \"는 제외하고 입력)\n  =>  ")
+        resultLine = input("\n* \"결과 패턴\" 입력\n  Ex) \"★ U_01. 결과 : 양호\" 이면 \"결과 : \" 입력\n* \"는 제외하고 입력)\n  =>  ")
     elif resultFlag == "n" or resultFlag == "" :
         resultFlag = 1
 
@@ -80,8 +83,11 @@ def SetStyle(resultFlag, ws, rowIndex):
     if resultFlag == 2 : ScolIndex -= 1
 
     # 행 높이 설정
-    #for row in range(2, rowIndex + 1):
-    #    ws.row_dimensions[row].height = 30
+    for row in range(3, rowIndex + 1):
+        ws.row_dimensions[row].height = 18
+
+    # 열 너비 설정
+    ws.column_dimensions['J'].width = 47
 
     # 기본 틀 스타일 설정
     # 제목 글자
@@ -115,18 +121,18 @@ def SetStyle(resultFlag, ws, rowIndex):
                                         bottom=Side(style='thin', color='002060'))
 
 def RemoveFile() :
-    if os.path.isfile("ParsingResult.xlsx"):
-        removeFlag = input("\n*** 기존 파일(\"ParsingResult.xlsx\")이 존재합니다.\n*** 계속 진행하려면 삭제해야 합니다. 삭제하시겠습니까?\n  예:y, 아니오:n\n =>  ")
+    if os.path.isfile("상세결과.xlsx"):
+        removeFlag = input("\n*** 기존 파일(\"상세결과.xlsx\")이 존재합니다.\n*** 계속 진행하려면 삭제해야 합니다. 삭제하시겠습니까?\n  예:y, 아니오:n\n =>  ")
         if removeFlag == "y" :
             try:
-                os.remove("ParsingResult.xlsx")
+                os.remove("상세결과.xlsx")
             except PermissionError:
-                print("\n*** \"ParsingResult.xlsx\"파일을 닫은 후 재실행해주세요.")
+                print("\n*** \"상세결과.xlsx\"파일을 닫은 후 재실행해주세요.")
                 time.sleep(2)
                 sys.exit()
-            print("\n*** 기존 파일(\"ParsingResult.xlsx\")을 삭제하였습니다.")
+            print("\n*** 기존 파일(\"상세결과.xlsx\")을 삭제하였습니다.")
         if removeFlag == "n":
-            print("기존 파일(\"ParsingResult.xlsx\") 삭제 후 실행해야 합니다.")
+            print("기존 파일(\"상세결과.xlsx\") 삭제 후 실행해야 합니다.")
             time.sleep(2)
             sys.exit()
 
@@ -135,9 +141,15 @@ def StartParse(pathDir, startLine, newStartLine, endLine, fileList, resultFlag, 
     # 엑셀 시트 및 기본 틀 생성
     wb = Workbook()
     ws = wb.active
+
+    ws.sheet_view.showGridLines = False
+
+    #ws.sheet_properties.pageSetUpPr = PageSetupProperties(autoPageBreaks=True, fitToPage=True)
+    #ws.sheet_properties.pageSetUpPr.autoPageBreaks=True
+
     ws.title = "상세결과"
 
-    ws.cell(1, 1, "■ DBMS 상세결과")
+    ws.cell(1, 1, "■ 상세결과")
     ws.cell(3, 1, "점검영역")
     ws.cell(3, 2, "CODE")
     ws.cell(3, 3, "점검항목")
@@ -154,7 +166,7 @@ def StartParse(pathDir, startLine, newStartLine, endLine, fileList, resultFlag, 
     write_txt = newStartLine
     rowIndex = 3
     colIndex = 10
-    resultFile = "ParsingResult.xlsx"
+    resultFile = "상세결과.xlsx"
 
     # 파일 하나씩 열어서 파싱
     for fileName in fileList:
@@ -173,6 +185,7 @@ def StartParse(pathDir, startLine, newStartLine, endLine, fileList, resultFlag, 
                 ws.cell(rowIndex, 6, fileName)
                 ws.cell(rowIndex, 7, fileName)
                 ws.cell(rowIndex, colIndex, write_txt)
+                ws.cell(rowIndex, colIndex).alignment = Alignment(wrap_text=True)
                 write_txt = newStartLine
             if readFlag == "True":
                 write_txt += txt
@@ -201,7 +214,7 @@ def main():
     StartParse(pathDir, startLine, newStartLine, endLine, fileList, resultFlag, resultLine)
 
     # 종료
-    print("\n*** 완료되었습니다. ***\n*** \"ParsingTool.exe\"이 있는 경로에 \"ParsingResult.xlsx\" 결과 파일이 생성됩니다. ***")
+    print("\n*** 완료 ***\n*** \"파싱 프로그램\"이 있는 경로에 \"상세결과.xlsx\" 결과 파일 생성 ***")
     time.sleep(5)
 
 
