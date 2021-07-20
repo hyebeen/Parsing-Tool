@@ -9,8 +9,7 @@
 - 자동 인코딩(utf-8) 변환   
 
 ### V2 결과 양식 ###
-![image](https://user-images.githubusercontent.com/17823031/123909918-b2adb000-d9b4-11eb-911c-adca2a0ad1e6.png)
-- 서버 개수에 따라 행 추가   
+![image](https://user-images.githubusercontent.com/17823031/126293051-764b94df-f6da-4a46-8fe1-02b183f4376b.png)  
 
 ### V2 사용법 ###
 1) 스크립트 결과(텍스트 파일)만 모아놓은 폴더 생성(폴더 내 파싱 도구 존재하지 않도록 주의)
