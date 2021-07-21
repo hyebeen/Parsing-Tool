@@ -4,12 +4,13 @@
 # pyinstaller --icon=pngegg.ico --onefile ParsingTool.py
 
 # 개선할 점
-# 1. 양호취약 판별 로직 수정
-# 2. utf-8 변환 에러 수정
-# 3. 페이지 나누기 미리보기
-# 4. default 문자열
-# 5. 선택한 dir 출력
-# 6. 현재상태
+# 1. default 문자열
+# 2. 선택한 dir 출력
+# 3. 현재상태
+# 4. 양호취약 판별 로직 수정
+# 5. 페이지 나누기 미리보기
+# 6. utf-8 변환 에러 수정
+# 7. 보고서 출력
 
 import io, os, time, sys
 from tkinter import *
@@ -89,7 +90,7 @@ startLabel.place(x=10, y=50)
 # 시작 패턴 입력
 global startPattern
 startPattern = Entry()
-startPattern.place(x=100, y=50, width=300, heigh=30) #콤보박스 배치
+startPattern.place(x=100, y=50, width=410, heigh=30) #콤보박스 배치
 
 # 마지막 패턴 라벨
 endLabel = Label(window, text="마지막 문자열")
@@ -98,7 +99,7 @@ endLabel.place(x=10, y=100)
 # 마지막 패턴 입력
 global endPattern
 endPattern = Entry(width=20)
-endPattern.place(x=100, y=100, width=300, heigh=30) #콤보박스 배치
+endPattern.place(x=100, y=100, width=410, heigh=30) #콤보박스 배치
 
 ## 시작 문자열 추가 라벨
 lbl3 = Label(window, text="현황 문자열 추가")
@@ -112,7 +113,7 @@ def StartStringY(event) :
 
     # 시작 문자열 입력
     StartStringEntry = Entry(width=20)
-    StartStringEntry.place(x=250, y=150, width=300, heigh=30)  # 콤보박스 배치
+    StartStringEntry.place(x=210, y=150, width=300, heigh=30)  # 콤보박스 배치
     StartString = StartStringEntry.get()
 
 # 시작 문자열 라디오 버튼
